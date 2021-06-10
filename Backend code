@@ -1,0 +1,570 @@
+import speech_recognition as sr
+from time import ctime
+import webbrowser
+import subprocess
+import cv2
+from tkinter import *
+import pyttsx3
+import pyautogui
+import pygame
+import random
+import time
+import urllib.request
+import re
+
+
+def ACT(asd):
+    engine = pyttsx3.init()
+    engine.say(asd)
+    engine.runAndWait()
+
+
+def recordAudio():
+    # Record Audio
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Say something!")
+        ACT("Say something")
+        audio = r.listen(source)
+
+    # Speech recognition using Google Speech Recognition
+    data = ""
+    try:
+        # Uses the default API key
+        # To use another API key: `r.recognize_google(audio, key="GOOGLE_SPEECH_RECOGNITION_API_KEY")`
+        data = r.recognize_google(audio)
+    except sr.UnknownValueError:
+        print("Google Speech Recognition could not understand audio")
+        ACT("Google Speech Recognition could not understand audio")
+    except sr.RequestError as e:
+        print("Could not request results from Google Speech Recognition service0; {0}".format(e))
+        ACT("Could not request results from Google Speech Recognition service0")
+
+    return data
+
+
+def jarvis(data):
+    if "features" in data:
+        print('You must find the Easter Egg')
+    if "say" in data:
+        dataact = data.replace('say', " ")
+        print(dataact)
+        ACT(dataact)
+    if "calculator" in data:
+
+        # Create a calculator class
+        class Calculator :
+
+            def __init__(self, master) :
+
+                '''
+                DOCSTRING: Define what to do on initialization
+                '''
+
+                # Assign reference to the main window of the application
+                self.master = master
+
+                # Add a name to our application
+                master.title("Python Calculator")
+
+                # Create a line where we display the equation
+                self.equation = Entry(master, width=36, borderwidth=5)
+
+                # Assign a position for the equation line in the grey application window
+                self.equation.grid(row=0, column=0, columnspan=4, padx=10, pady=10)
+
+                # Execute the .creteButton() method
+                self.createButton()
+
+            def createButton(self) :
+
+                '''
+                DOCSTRING: Method that creates the buttons
+                INPUT: nothing
+                OUTPUT: creates a button
+                '''
+
+                # We first create each button one by one with the value we want
+                # Using addButton() method which is described below
+                b0 = self.addButton(0)
+                b1 = self.addButton(1)
+                b2 = self.addButton(2)
+                b3 = self.addButton(3)
+                b4 = self.addButton(4)
+                b5 = self.addButton(5)
+                b6 = self.addButton(6)
+                b7 = self.addButton(7)
+                b8 = self.addButton(8)
+                b9 = self.addButton(9)
+                b_add = self.addButton('+')
+                b_sub = self.addButton('-')
+                b_mult = self.addButton('*')
+                b_div = self.addButton('/')
+                b_clear = self.addButton('c')
+                b_equal = self.addButton('=')
+
+                # Arrange the buttons into lists which represent calculator rows
+                row1 = [b7, b8, b9, b_add]
+                row2 = [b4, b5, b6, b_sub]
+                row3 = [b1, b2, b3, b_mult]
+                row4 = [b_clear, b0, b_equal, b_div]
+
+                # Assign each button to a particular location on the GUI
+                r = 1
+                for row in [row1, row2, row3, row4] :
+                    c = 0
+                    for buttn in row :
+                        buttn.grid(row=r, column=c, columnspan=1)
+                        c += 1
+                    r += 1
+
+            def addButton(self, value) :
+
+                '''
+                DOCSTRING: Method to process the creation of a button and make it clickable
+                INPUT: value of the button (1,2,3,4,5,6,7,8,9,0,+,-,*,/,c,=)
+                OUTPUT: returns a designed button object
+                '''
+                return Button(self.master, text=value, width=9, command=lambda : self.clickButton(str(value)))
+
+            def clickButton(self, value) :
+
+                '''
+                DOCSTRING: Method to program the actions that will happen in the calculator after a click of each button
+                INPUT: value of the button (1,2,3,4,5,6,7,8,9,0,+,-,*,/,c,=)
+                OUTPUT: what action will be performed when a particular button is clicked
+                '''
+
+                # Get the equation that's entered by the user
+                current_equation = str(self.equation.get())
+
+                # If user clicked "c", then clear the screen
+                if value == 'c' :
+                    self.equation.delete(-1, END)
+
+                # If user clicked "=", then compute the answer and display it
+                elif value == '=' :
+                    answer = str(eval(current_equation))
+                    self.equation.delete(-1, END)
+                    self.equation.insert(0, answer)
+
+                # If user clicked any other button, then add it to the equation line
+                else :
+                    self.equation.delete(0, END)
+                    self.equation.insert(-1, current_equation + value)
+
+        # Execution
+        if __name__ == '__main__' :
+            # Create the main window of an application
+            root = Tk()
+
+            # Tell our calculator class to use this window
+            my_gui = Calculator(root)
+
+            # Executable loop on the application, waits for user input
+            root.mainloop()
+    if "open Chrome" in data:
+        subprocess.Popen('C:\Program Files\Google\Chrome\Application\chrome')
+    if data in ('Edge', 'open Edge', 'open Microsoft Edge'):
+        subprocess.Popen('C:\Program Files (x86)\Microsoft\Edge\Application\msedge')
+    if "take me to tutor" in data:
+        def click() :
+            time.sleep(0.1)
+            pyautogui.click()
+
+        for i in range(1) :
+            pyautogui.moveTo(600, 1050, duration=0.5)
+            click()
+    if "I want a timer" in data:
+        import time
+        def actcount():
+            def countdown(t) :
+                while t :
+                    mins, secs = divmod(t, 60)
+                    timer = '{:02d}:{:02d}'.format(mins, secs)
+                    print(timer, end="\r")
+                    time.sleep(1)
+                    t -= 1
+                print('Blast Off!!!')
+                ACT('Blast Off')
+
+            t = input("Enter the time in seconds: ")
+            ACT("Enter the time in seconds: ")
+            countdown(int(t))
+    if 'take a photo' in data:
+        import cv2
+
+        cam = cv2.VideoCapture(0)
+
+        cv2.namedWindow("test")
+
+        img_counter = 0
+
+        while True :
+            ret, frame = cam.read()
+            if not ret :
+                print("failed to grab frame")
+                break
+            cv2.imshow("test", frame)
+
+            k = cv2.waitKey(1)
+            if k % 256 == 27 :
+                # ESC pressed
+                print("Escape hit, closing...")
+                break
+            elif k % 256 == 32 :
+                # SPACE pressed
+                img_name = "opencv_frame_{}.png".format(img_counter)
+                cv2.imwrite(img_name, frame)
+                print("{} written!".format(img_name))
+                img_counter += 1
+
+        cam.release()
+
+        cv2.destroyAllWindows()
+        from PIL import Image
+
+        # ...
+
+        img = Image.open(img_name)
+        img.show()
+        def timer() :
+            def countdown(t) :
+                while t :
+                    mins, secs = divmod(t, 60)
+                    timer = '{:02d}:{:02d}'.format(mins, secs)
+                    print(timer, end="\r")
+                    time.sleep(1)
+                    t += 1
+
+            t = "0"
+            countdown(int(t))
+
+        timer()
+        i7 = input('Do you want a timer or a countdown?')
+        ACT('Do you want a timer or a countdown?')
+        if i7 in "timer":
+            timer()
+        else:
+            actcount()
+    if "add to my grocery list" in data:
+        a1 = input('what do you want to add (note the notes you added before will be erased)?')
+        ACT('what do you want to add (note the notes you added before will be erased)?')
+        file2 = open("Files/Groceries.txt", "w")
+        file2.write(a1)
+        file2.close()
+    if "make a new file" in data:
+        a = input('What will be the name')
+        ACT('What will be the name')
+        ab = input('What do you want to write?')
+        ACT('What do you want to write?')
+        file = open(a + ".txt", "w")
+        file.write(ab)
+        file.close()
+        print('Done!')
+        ACT('Done')
+    if "read a file" in data:
+        filename = input("Whats the file name (include the extension) ?")
+        if filename == 'x' :
+            exit()
+        else :
+            c = open(filename, "r")
+            print("\nHey your file opened!,", filename, "opened successfully!")
+            print("Your", filename, "Says\n")
+            print(c.read())
+            print('and thats the end of the file')
+    if "what's on my grocery list" in data:
+        filename = "Files/Groceries.txt"
+        if filename == 'x' :
+            exit()
+        else :
+            c = open(filename, "r")
+            print("\nHey your Groceries opened!,", filename, "opened successfully!")
+            ACT("\nHey your Groceries opened!")
+            print("Your", filename, "Says\n")
+            print(c.read())
+            ACT(c.read())
+            print('and thats the end of the list')
+            c.close()
+    if data in ('stop','exit','bye',"goodbye"):
+        import sys
+        ACT("Bye")
+        sys.exit()
+    if "I want to play a song" in data:
+        import pyaudio
+        import wave
+        asdwe = input('Song name(only wav files)?')
+        ACT('Song name')
+        asdwe1 = (asdwe + ".wav")
+        # define stream chunk
+        asdwe2 = (r"C:\Users\Adeel\PycharmProjects\Adeel\Forassistantsongsformusic\ " + asdwe1)
+        asdwe3 = asdwe2.replace(' ', '')
+        chunk = 1024
+        # open a wav format music
+        f = wave.open(asdwe3, "rb")
+        # instantiate PyAudio
+        p = pyaudio.PyAudio()
+        # open stream
+        stream = p.open(format=p.get_format_from_width(f.getsampwidth()),
+                        channels=f.getnchannels(),
+                        rate=f.getframerate(),
+                        output=True)
+        # read data
+        data = f.readframes(chunk)
+
+        # play stream
+        while data :
+            stream.write(data)
+            data = f.readframes(chunk)
+
+        # stop stream
+        stream.stop_stream()
+        stream.close()
+
+        # close PyAudio
+        p.terminate()
+
+    if "how are you" in data:
+        print("I am fine")
+        ACT('Nice')
+    if "open my cam" in data:
+        # define a video capture object
+        vid = cv2.VideoCapture(0)
+
+        while (True):
+
+            # Capture the video frame
+            # by frame
+            ret, frame = vid.read()
+
+            # Display the resulting frame)
+            cv2.imshow('frame', frame)
+            # the 'q' button is set as the
+            # quitting button you may use any
+            # desired button of your choice
+            if cv2.waitKey(1) & 0xFF == ord('q'):
+                break
+
+        # After the loop release the cap object
+        vid.release()
+        # Destroy all the windows
+        cv2.destroyAllWindows()
+    if "I want to look at a month" in data:
+        import calendar
+
+        yy = input("Year?")
+        mm = input("Month?")
+
+        # display the calendar
+        print(calendar.month(int(yy), int(mm)))
+    if "I want to look at a year" in data:
+        import calendar
+
+        yy = input("Year?")
+
+        # display the calendar
+        print(calendar.calendar(int(yy)))
+    if "I want to make a recording" in data:
+        import tkinter as tk
+        import threading
+        import pyaudio
+        import wave
+
+        class App() :
+            chunk = 1024
+            sample_format = pyaudio.paInt16
+            channels = 2
+            fs = 44100
+
+            frames = []
+
+            def __init__(self, master) :
+                self.isrecording = False
+                self.button1 = tk.Button(main, text='recording', command=self.startrecording)
+                self.button2 = tk.Button(main, text='stop', command=self.stoprecording)
+
+                self.button1.pack()
+                self.button2.pack()
+
+            def startrecording(self) :
+                self.p = pyaudio.PyAudio()
+                self.stream = self.p.open(format=self.sample_format, channels=self.channels, rate=self.fs,
+                                          frames_per_buffer=self.chunk, input=True)
+                self.isrecording = True
+
+                print('Recording')
+                ACT('Recording')
+                t = threading.Thread(target=self.record)
+                t.start()
+
+            def stoprecording(self) :
+                self.isrecording = False
+                print('recording complete')
+                ACT('recording complete')
+                self.filename = input('the filename?')
+                self.filename = self.filename + ".wav"
+                wf = wave.open(self.filename, 'wb')
+                wf.setnchannels(self.channels)
+                wf.setsampwidth(self.p.get_sample_size(self.sample_format))
+                wf.setframerate(self.fs)
+                wf.writeframes(b''.join(self.frames))
+                wf.close()
+                main.destroy()
+
+            def record(self) :
+                while self.isrecording :
+                    data = self.stream.read(self.chunk)
+                    self.frames.append(data)
+
+        main = tk.Tk()
+        main.title('recorder')
+        main.geometry('200x50')
+        app = App(main)
+        main.mainloop()
+    if "open Gmail" in data:
+        webbrowser.open_new_tab('https://www.gmail.com')
+    if "what is the weather" in data:
+        import requests
+
+        # Enter your API key here
+        api_key = "d79d8b56a560a9780a3774069683753f"
+
+        # base_url variable to store url
+        base_url = "http://api.openweathermap.org/data/2.5/weather?"
+
+        # Give city name
+        city_name = "SugarLand"
+
+        # complete_url variable to store
+        # complete url address
+        complete_url = base_url + "appid=" + api_key + "&q=" + city_name
+
+        # get method of requests module
+        # return response object
+        response = requests.get(complete_url)
+
+        # json method of response object
+        # convert json format data into
+        # python format data
+        x = response.json()
+
+        # Now x contains list of nested dictionaries
+        # Check the value of "cod" key is equal to
+        # "404", means city is found otherwise,
+        # city is not found
+        if x["cod"] != "404":
+
+            # store the value of "main"
+            # key in variable y
+            y = x["main"]
+
+            # store the value corresponding
+            # to the "temp" key of y
+            current_temperature = y["temp"]
+
+            # store the value corresponding
+            # to the "pressure" key of y
+            current_pressure = y["pressure"]
+
+            # store the value corresponding
+            # to the "humidity" key of y
+            current_humidiy = y["humidity"]
+
+            # store the value of "weather"
+            # key in variable z
+            z = x["weather"]
+
+            # store the value corresponding
+            # to the "description" key at
+            # the 0th index of z
+            weather_description = z[0]["description"]
+
+            # print following values
+            print(" Temperature (in kelvin unit) = " +
+                  str(current_temperature) +
+                  "\n atmospheric pressure (in hPa unit) = " +
+                  str(current_pressure) +
+                  "\n humidity (in percentage) = " +
+                  str(current_humidiy) +
+                  "\n description = " +
+                  str(weather_description))
+
+        else:
+            print(" City Not Found ")
+            ACT('What')
+    if "what time is it" in data:
+        print(ctime())
+        ACT(ctime())
+    if "Youtube video" in  data:
+        search_keyword = "Inaminate"
+        html = urllib.request.urlopen("https://www.youtube.com/results?search_query=" + search_keyword)
+        video_ids = re.findall(r"watch\?v=(\S{11})", html.read().decode())
+        a = ("https://www.youtube.com/watch?v=" + video_ids[0])
+        webbrowser.open(a)
+    if "where is" in data:
+        data = data.split(" ")
+        location = data[2]
+        print("Hold on Adeel, I will show you where " + location + " is.")
+        ACT("Hold on Adeel, I'll show ya where it is just wait a minute")
+        webbrowser.open_new_tab('https://www.google.com/maps/place/' + location)
+    elif "search" in data:
+        data1 = data.replace("search", "")
+        webbrowser.open('https://www.google.com/search?q=' + data1)
+    if "up the ad" in data:
+        print('U HAVE NOW UNLOCKED SUPER ADBOT USE THIS COMMAND IN THE QUESTION adfdjfsgsgsjgsjgsujbgsjg')
+        a = input('this is not the question')
+        if a in 'adfdjfsgsgsjgsjgsujbgsjg':
+            print('You are awesome')
+            print('Here is the list')
+            print(
+                "-----------------------------------------------This Assistant is still in beta-----------------------------------------------")
+            print(
+                '-----------------------------------------------Say the names of the commands to use them-----------------------------------------------')
+            print('1.say - you can command me to say something using this')
+            print("2.open Chrome")
+            print('3. open Edge')
+            print("4. I want a timer")
+            print("5. add to my grocery list")
+            print("6. make a new file")
+            print("7. read a file")
+            print("8. what's on my grocery list")
+            print("9. stop")
+            print("10. I want to play a song")
+            print("11. how are you")
+            print("12. open my cam")
+            print("13. I want to look at a month")
+            print("14. I want to look at a year")
+            print('15. I want to make a recording')
+            print('16. open Gmail')
+            print('17. what is the weather')
+            print('18. what time is it')
+            print('19. where is')
+            print('20. search')
+            print('21. calculator')
+    if "what is" in data:
+        import wolframalpha
+
+        # Taking input from user
+        question = data.replace('what is', "")
+
+        # App id obtained by the above steps
+        app_id = 'G584KL-2JJE299PGY'
+
+        # Instance of wolf ram alpha
+        # client class
+        client = wolframalpha.Client(app_id)
+
+        # Stores the response from
+        # wolf ram alpha
+        res = client.query(question)
+
+        # Includes only text from the response
+        answer = next(res.results).text
+
+        print(answer)
+    if "shutdown my computer" in data:
+        print("Ok , your pc will log off in 10 sec make sure you exit from all applications")
+        subprocess.call(["shutdown", "/l"])
+# initialization
+time.sleep(2)
+print("Hi Adeel, what can I do for you?")
